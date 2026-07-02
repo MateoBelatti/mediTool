@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="Biblioteca/Biblioteca.csproj" Id="3445540e-5200-4b3e-8e61-8bf2ad2d7d17" />
   <Project Path="mediTool/mediTool.csproj" />
   <Project Path="Utils/Utils.csproj" Id="5a96f677-1d50-49fc-971e-21c1d36ed341" />
 </Solution>
