@@ -1,7 +1,7 @@
 using System.Net;
 using System.Text.Json;
 using Utils.Exceptions;
-using Utils.DTO;
+using Utils.DTO.Api;
 
 namespace mediTool.Middlewares
 {
