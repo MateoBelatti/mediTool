@@ -84,7 +84,7 @@ namespace mediTool.Middlewares
 
             context.Response.StatusCode = (int)statusCode;
 
-            var response = new ApiErrorResponse
+            var response = new ApiErrorResponseDto
             {
                 Status = "error",
                 Code = (int)statusCode,

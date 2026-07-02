@@ -1,6 +1,6 @@
 namespace Utils.DTO.Api
 {
-    public class ApiErrorResponse
+    public class ApiErrorResponseDto
     {
         public string Status { get; set; } = "error";
         public int Code { get; set; }
