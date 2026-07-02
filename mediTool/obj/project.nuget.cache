@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "z1ou34BVyEM=",
+  "success": true,
+  "projectFilePath": "D:\\aprendiendoC#\\mediTool\\mediTool\\mediTool.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\teobe\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.9\\microsoft.aspnetcore.openapi.10.0.9.nupkg.sha512",
+    "C:\\Users\\teobe\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}
