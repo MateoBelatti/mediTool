@@ -1,17 +1,10 @@
 using System.Net;
 using System.Text.Json;
 using Utils.Exceptions;
+using Utils.DTO;
 
 namespace mediTool.Middlewares
 {
-    public class ApiErrorResponse
-    {
-        public string Status { get; set; } = "error";
-        public int Code { get; set; }
-        public string Message { get; set; } = string.Empty;
-        public List<string> Details { get; set; } = new();
-    }
-
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
