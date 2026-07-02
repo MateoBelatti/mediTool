@@ -48,6 +48,15 @@ namespace mediTool.Middlewares
 
             switch (exception)
             {
+                case InternalError internalEx:
+                    statusCode = HttpStatusCode.InternalServerError;
+                    message = "Error interno del servidor.";
+                    if (_env.IsDevelopment())
+                    {
+                        details.Add(internalEx.Message);
+                        details.AddRange(internalEx.Details);
+                    }
+                    break;
                 case AppException appEx:
                     statusCode = appEx.StatusCode;
                     message = appEx.Message;
