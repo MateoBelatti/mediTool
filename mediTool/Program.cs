@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using mediTool.Middlewares;
+using mediTool.Mappers;
 using Biblioteca.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") 
         ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
+
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
