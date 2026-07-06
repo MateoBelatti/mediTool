@@ -68,5 +68,16 @@ namespace Service.Profesionales
             var result = await _repository.GetByMatriculaAsync(matricula);
             return _mapper.Map<ProfesionalResponseDto>(result);
         }
+
+        public async Task VincularPacienteAsync(int profesionalId, int pacienteId)
+        {
+            await _repository.VincularPacienteAsync(profesionalId, pacienteId);
+        }
+
+        public async Task<IEnumerable<Utils.DTOs.Paciente.PacienteResponseDto>> GetPacientesVinculadosAsync(int profesionalId)
+        {
+            var result = await _repository.GetPacientesVinculadosAsync(profesionalId);
+            return _mapper.Map<IEnumerable<Utils.DTOs.Paciente.PacienteResponseDto>>(result);
+        }
     }
 }

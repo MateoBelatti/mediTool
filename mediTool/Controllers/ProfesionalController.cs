@@ -66,5 +66,19 @@ namespace mediTool.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("{id}/pacientes/{pacienteId}")]
+        public async Task<IActionResult> VincularPaciente(int id, int pacienteId)
+        {
+            await _profesionalService.VincularPacienteAsync(id, pacienteId);
+            return Ok();
+        }
+
+        [HttpGet("{id}/pacientes")]
+        public async Task<IActionResult> GetPacientesVinculados(int id)
+        {
+            var pacientes = await _profesionalService.GetPacientesVinculadosAsync(id);
+            return Ok(pacientes);
+        }
     }
 }

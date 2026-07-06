@@ -11,5 +11,7 @@ namespace Service.Profesionales
         Task<ProfesionalResponseDto?> GetByIdAsync(int id);
         Task<ProfesionalResponseDto?> GetByEmailAsync(string email);
         Task<ProfesionalResponseDto?> GetByMatriculaAsync(string matricula);
+        Task VincularPacienteAsync(int profesionalId, int pacienteId);
+        Task<IEnumerable<Utils.DTOs.Paciente.PacienteResponseDto>> GetPacientesVinculadosAsync(int profesionalId);
     }
 }
