@@ -12,6 +12,7 @@ namespace Biblioteca.Repository
 
         public DbSet<Profesional> Profesionales { get; set; }
         public DbSet<Paciente> Pacientes { get; set; }
+        public DbSet<PacienteProfesional> PacienteProfesionales { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,20 @@ namespace Biblioteca.Repository
             modelBuilder.Entity<Paciente>()
                 .HasIndex(p => p.Dni)
                 .IsUnique();
+
+            // Configure Many-to-Many relationship
+            modelBuilder.Entity<PacienteProfesional>()
+                .HasKey(pp => new { pp.PacienteId, pp.ProfesionalId });
+
+            modelBuilder.Entity<PacienteProfesional>()
+                .HasOne(pp => pp.Paciente)
+                .WithMany(p => p.PacienteProfesionales)
+                .HasForeignKey(pp => pp.PacienteId);
+
+            modelBuilder.Entity<PacienteProfesional>()
+                .HasOne(pp => pp.Profesional)
+                .WithMany(p => p.PacienteProfesionales)
+                .HasForeignKey(pp => pp.ProfesionalId);
         }
     }
 }

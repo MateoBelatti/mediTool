@@ -44,5 +44,7 @@ namespace Biblioteca.Entities
         [MaxLength(255)]
         [Column("password")]
         public string Password { get; set; } = string.Empty;
+
+        public ICollection<PacienteProfesional> PacienteProfesionales { get; set; } = new List<PacienteProfesional>();
     }
 }

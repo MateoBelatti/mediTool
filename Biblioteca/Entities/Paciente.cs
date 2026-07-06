@@ -49,5 +49,7 @@ namespace Biblioteca.Entities
 
         [Column("created_at")]
         public DateTime? CreatedAt { get; set; }
+
+        public ICollection<PacienteProfesional> PacienteProfesionales { get; set; } = new List<PacienteProfesional>();
     }
 }

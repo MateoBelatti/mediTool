@@ -56,5 +56,33 @@ namespace Repository.Profesionales
         {
             return await _context.Profesionales.FirstOrDefaultAsync(p => p.Matricula == matricula);
         }
+
+        public async Task VincularPacienteAsync(int profesionalId, int pacienteId)
+        {
+            var vinculacion = new PacienteProfesional
+            {
+                ProfesionalId = profesionalId,
+                PacienteId = pacienteId,
+                FechaVinculacion = DateTime.UtcNow
+            };
+            
+            // Verificamos si ya existe la vinculación para no duplicar
+            var exists = await _context.PacienteProfesionales
+                .AnyAsync(pp => pp.ProfesionalId == profesionalId && pp.PacienteId == pacienteId);
+                
+            if (!exists)
+            {
+                _context.PacienteProfesionales.Add(vinculacion);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Paciente>> GetPacientesVinculadosAsync(int profesionalId)
+        {
+            return await _context.PacienteProfesionales
+                .Where(pp => pp.ProfesionalId == profesionalId)
+                .Select(pp => pp.Paciente)
+                .ToListAsync();
+        }
     }
 }
