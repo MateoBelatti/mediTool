@@ -2,6 +2,10 @@ using Microsoft.EntityFrameworkCore;
 using mediTool.Middlewares;
 using mediTool.Mappers;
 using Biblioteca.Repository;
+using Repository.Pacientes;
+using Repository.Profesionales;
+using Service.Pacientes;
+using Service.Profesionales;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +16,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")));
 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
+
+// Inyección de dependencias de Repositorios
+builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
+builder.Services.AddScoped<IProfesionalRepository, ProfesionalRepository>();
+
+// Inyección de dependencias de Servicios
+builder.Services.AddScoped<IPacienteService, PacienteService>();
+builder.Services.AddScoped<IProfesionalService, ProfesionalService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
