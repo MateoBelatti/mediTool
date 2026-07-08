@@ -45,6 +45,13 @@ namespace Biblioteca.Entities
         [Column("password")]
         public string Password { get; set; } = string.Empty;
 
+        [MaxLength(255)]
+        [Column("refresh_token")]
+        public string? RefreshToken { get; set; }
+
+        [Column("refresh_token_expiry_time")]
+        public DateTime? RefreshTokenExpiryTime { get; set; }
+
         public ICollection<PacienteProfesional> PacienteProfesionales { get; set; } = new List<PacienteProfesional>();
     }
 }
