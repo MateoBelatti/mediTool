@@ -57,6 +57,11 @@ namespace Repository.Profesionales
             return await _context.Profesionales.FirstOrDefaultAsync(p => p.Matricula == matricula);
         }
 
+        public async Task<Profesional?> GetByRefreshTokenAsync(string refreshToken)
+        {
+            return await _context.Profesionales.FirstOrDefaultAsync(p => p.RefreshToken == refreshToken);
+        }
+
         public async Task VincularPacienteAsync(int profesionalId, int pacienteId)
         {
             var vinculacion = new PacienteProfesional
