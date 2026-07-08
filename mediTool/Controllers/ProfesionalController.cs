@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Service.Profesionales;
 using Utils.DTOs.Profesional;
 
 namespace mediTool.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ProfesionalController : ControllerBase

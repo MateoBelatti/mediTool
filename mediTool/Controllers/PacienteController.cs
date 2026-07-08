@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Service.Pacientes;
 using Utils.DTOs.Paciente;
 
 namespace mediTool.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PacienteController : ControllerBase
