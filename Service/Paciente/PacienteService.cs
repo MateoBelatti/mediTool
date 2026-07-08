@@ -2,6 +2,7 @@ using AutoMapper;
 using Biblioteca.Entities;
 using Repository.Pacientes;
 using Utils.DTOs.Paciente;
+using Utils.Exceptions;
 
 namespace Service.Pacientes
 {
@@ -18,6 +19,20 @@ namespace Service.Pacientes
 
         public async Task<PacienteResponseDto> AddAsync(PacienteCreateDto dto)
         {
+            if (!string.IsNullOrWhiteSpace(dto.Dni))
+            {
+                var existingDni = await _repository.GetByDniAsync(dto.Dni);
+                if (existingDni != null)
+                    throw new ConflictError("Ya existe un paciente con este DNI.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.Email))
+            {
+                var existingEmail = await _repository.GetByEmailAsync(dto.Email);
+                if (existingEmail != null)
+                    throw new ConflictError("Ya existe un paciente con este email.");
+            }
+
             var entity = _mapper.Map<Paciente>(dto);
             var result = await _repository.AddAsync(entity);
             return _mapper.Map<PacienteResponseDto>(result);
@@ -27,6 +42,20 @@ namespace Service.Pacientes
         {
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null) return null;
+
+            if (!string.IsNullOrWhiteSpace(dto.Dni) && dto.Dni != existing.Dni)
+            {
+                var existingDni = await _repository.GetByDniAsync(dto.Dni);
+                if (existingDni != null && existingDni.Id != id)
+                    throw new ConflictError("Ya existe un paciente con este DNI.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.Email) && dto.Email != existing.Email)
+            {
+                var existingEmail = await _repository.GetByEmailAsync(dto.Email);
+                if (existingEmail != null && existingEmail.Id != id)
+                    throw new ConflictError("Ya existe un paciente con este email.");
+            }
 
             _mapper.Map(dto, existing);
             var result = await _repository.UpdateAsync(existing);

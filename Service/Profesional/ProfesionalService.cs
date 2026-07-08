@@ -2,6 +2,7 @@ using AutoMapper;
 using Biblioteca.Entities;
 using Repository.Profesionales;
 using Utils.DTOs.Profesional;
+using Utils.Exceptions;
 
 namespace Service.Profesionales
 {
@@ -25,6 +26,20 @@ namespace Service.Profesionales
 
         public async Task<ProfesionalResponseDto> AddAsync(ProfesionalCreateDto dto)
         {
+            if (!string.IsNullOrWhiteSpace(dto.Email))
+            {
+                var existingEmail = await _repository.GetByEmailAsync(dto.Email);
+                if (existingEmail != null)
+                    throw new ConflictError("Ya existe un profesional con este email.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.Matricula))
+            {
+                var existingMatricula = await _repository.GetByMatriculaAsync(dto.Matricula);
+                if (existingMatricula != null)
+                    throw new ConflictError("Ya existe un profesional con esta matrícula.");
+            }
+
             var entity = _mapper.Map<Profesional>(dto);
             if (!string.IsNullOrWhiteSpace(entity.Password))
             {
@@ -38,6 +53,20 @@ namespace Service.Profesionales
         {
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null) return null;
+
+            if (!string.IsNullOrWhiteSpace(dto.Email) && dto.Email != existing.Email)
+            {
+                var existingEmail = await _repository.GetByEmailAsync(dto.Email);
+                if (existingEmail != null && existingEmail.Id != id)
+                    throw new ConflictError("Ya existe un profesional con este email.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(dto.Matricula) && dto.Matricula != existing.Matricula)
+            {
+                var existingMatricula = await _repository.GetByMatriculaAsync(dto.Matricula);
+                if (existingMatricula != null && existingMatricula.Id != id)
+                    throw new ConflictError("Ya existe un profesional con esta matrícula.");
+            }
 
             _mapper.Map(dto, existing);
             var result = await _repository.UpdateAsync(existing);
