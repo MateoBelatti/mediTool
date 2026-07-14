@@ -17,6 +17,13 @@ namespace mediTool.Controllers
             _pacienteService = pacienteService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+        {
+            var pacientes = await _pacienteService.GetAllAsync();
+            return Ok(pacientes);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {

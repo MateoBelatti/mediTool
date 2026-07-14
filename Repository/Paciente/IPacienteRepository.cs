@@ -4,6 +4,7 @@ namespace Repository.Pacientes
 {
     public interface IPacienteRepository
     {
+        Task<IEnumerable<Paciente>> GetAllAsync();
         Task<Paciente?> GetAsync(Paciente entity);
         Task<Paciente> AddAsync(Paciente entity);
         Task<Paciente> UpdateAsync(Paciente entity);

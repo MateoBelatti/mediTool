@@ -4,6 +4,7 @@ namespace Service.Pacientes
 {
     public interface IPacienteService
     {
+        Task<IEnumerable<PacienteResponseDto>> GetAllAsync();
         Task<PacienteResponseDto> AddAsync(PacienteCreateDto dto);
         Task<PacienteResponseDto?> UpdateAsync(int id, PacienteUpdateDto dto);
         Task<bool> DeleteAsync(int id);

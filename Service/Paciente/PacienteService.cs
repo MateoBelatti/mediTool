@@ -17,6 +17,12 @@ namespace Service.Pacientes
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<PacienteResponseDto>> GetAllAsync()
+        {
+            var result = await _repository.GetAllAsync();
+            return _mapper.Map<IEnumerable<PacienteResponseDto>>(result);
+        }
+
         public async Task<PacienteResponseDto> AddAsync(PacienteCreateDto dto)
         {
             if (!string.IsNullOrWhiteSpace(dto.Dni))

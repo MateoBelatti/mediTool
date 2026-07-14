@@ -18,6 +18,11 @@ namespace Repository.Pacientes
             return await _context.Pacientes.FirstOrDefaultAsync(p => p.Id == entity.Id);
         }
 
+        public async Task<IEnumerable<Paciente>> GetAllAsync()
+        {
+            return await _context.Pacientes.ToListAsync();
+        }
+
         public async Task<Paciente> AddAsync(Paciente entity)
         {
             _context.Pacientes.Add(entity);
