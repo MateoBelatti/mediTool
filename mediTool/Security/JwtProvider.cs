@@ -29,6 +29,7 @@ namespace mediTool.Security
             {
                 new Claim(JwtRegisteredClaimNames.Sub, profesional.Id.ToString()),
                 new Claim(JwtRegisteredClaimNames.Email, profesional.Email ?? string.Empty),
+                new Claim(JwtRegisteredClaimNames.Name, $"{profesional.Nombre} {profesional.Apellido}".Trim()),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
