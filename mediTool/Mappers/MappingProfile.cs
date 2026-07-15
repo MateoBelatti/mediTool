@@ -3,6 +3,9 @@ using Biblioteca.Entities;
 using Utils.DTO;
 using Utils.DTOs.Paciente;
 using Utils.DTOs.Profesional;
+using Utils.DTOs.TurnoFijo;
+using Utils.DTOs.Turno;
+using Utils.DTOs.Asistencia;
 
 namespace mediTool.Mappers
 {
@@ -30,6 +33,27 @@ namespace mediTool.Mappers
                 .ForMember(dest => dest.Password, opt => opt.Ignore()); // Ignoramos Password al actualizar el perfil básico
 
             CreateMap<Profesional, ProfesionalResponseDto>();
+
+            // Mapeos de TurnoFijo
+            CreateMap<CrearTurnoFijoDto, TurnoFijo>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<EditarTurnoFijoDto, TurnoFijo>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.PacienteId, opt => opt.Ignore())
+                .ForMember(dest => dest.ProfesionalId, opt => opt.Ignore())
+                .ForMember(dest => dest.FechaInicio, opt => opt.Ignore());
+
+            // Mapeos de Turno
+            CreateMap<CrearTurnoDto, Turno>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.Estado, opt => opt.MapFrom(src => src.Estado.ToString()));
+
+            // Mapeos de Asistencia
+            CreateMap<ActualizarAsistenciaDto, Asistencia>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.TurnoId, opt => opt.Ignore())
+                .ForMember(dest => dest.FechaRegistro, opt => opt.Ignore());
         }
     }
 }
