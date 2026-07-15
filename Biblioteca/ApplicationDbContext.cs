@@ -13,6 +13,7 @@ namespace Biblioteca.Repository
         public DbSet<Profesional> Profesionales { get; set; }
         public DbSet<Paciente> Pacientes { get; set; }
         public DbSet<PacienteProfesional> PacienteProfesionales { get; set; }
+        public DbSet<TurnoFijo> TurnosFijos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
