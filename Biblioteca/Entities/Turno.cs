@@ -3,12 +3,15 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Biblioteca.Entities
 {
-    [Table("turno_fijo")]
-    public class TurnoFijo
+    [Table("turno")]
+    public class Turno
     {
         [Key]
         [Column("id")]
         public int Id { get; set; }
+
+        [Column("turno_fijo_id")]
+        public int? TurnoFijoId { get; set; }
 
         [Required]
         [Column("paciente_id")]
@@ -19,35 +22,26 @@ namespace Biblioteca.Entities
         public int ProfesionalId { get; set; }
 
         [Required]
-        [Column("dia_semana")]
-        public int DiaSemana { get; set; }
-
-        [Required]
-        [Column("hora")]
-        public TimeSpan Hora { get; set; }
+        [Column("fecha_hora")]
+        public DateTime FechaHora { get; set; }
 
         [Required]
         [Column("duracion_min")]
         public int DuracionMin { get; set; }
 
         [Required]
-        [Column("fecha_inicio")]
-        public DateOnly FechaInicio { get; set; }
-
-        [Column("fecha_fin")]
-        public DateOnly? FechaFin { get; set; }
-
-        [Required]
-        [Column("activo")]
-        public bool Activo { get; set; }
+        [MaxLength(50)]
+        [Column("estado")]
+        public string Estado { get; set; } = string.Empty;
 
         // Navigation properties
+        [ForeignKey("TurnoFijoId")]
+        public TurnoFijo? TurnoFijo { get; set; }
+
         [ForeignKey("PacienteId")]
         public Paciente? Paciente { get; set; }
 
         [ForeignKey("ProfesionalId")]
         public Profesional? Profesional { get; set; }
-
-        public ICollection<Turno> Turnos { get; set; } = new List<Turno>();
     }
 }
