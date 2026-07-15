@@ -4,8 +4,14 @@ using mediTool.Mappers;
 using Biblioteca.Repository;
 using Repository.Pacientes;
 using Repository.Profesionales;
+using Repository.TurnosFijos;
+using Repository.Turnos;
+using Repository.Asistencias;
 using Service.Pacientes;
 using Service.Profesionales;
+using Service.TurnosFijos;
+using Service.Turnos;
+using Service.Asistencias;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -25,10 +31,17 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 // Inyección de dependencias de Repositorios
 builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
 builder.Services.AddScoped<IProfesionalRepository, ProfesionalRepository>();
+builder.Services.AddScoped<ITurnoFijoRepository, TurnoFijoRepository>();
+builder.Services.AddScoped<ITurnoRepository, TurnoRepository>();
+builder.Services.AddScoped<IAsistenciaRepository, AsistenciaRepository>();
 
 // Inyección de dependencias de Servicios
 builder.Services.AddScoped<IPacienteService, PacienteService>();
 builder.Services.AddScoped<IProfesionalService, ProfesionalService>();
+builder.Services.AddScoped<ITurnoFijoService, TurnoFijoService>();
+builder.Services.AddScoped<IGenerarInstanciasTurnoService, GenerarInstanciasTurnoService>();
+builder.Services.AddScoped<ITurnoService, TurnoService>();
+builder.Services.AddScoped<IAsistenciaService, AsistenciaService>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
