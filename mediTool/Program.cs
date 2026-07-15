@@ -4,8 +4,12 @@ using mediTool.Mappers;
 using Biblioteca.Repository;
 using Repository.Pacientes;
 using Repository.Profesionales;
+using Repository.Informes;
+using Repository.Reuniones;
 using Service.Pacientes;
 using Service.Profesionales;
+using Service.Informes;
+using Service.Reuniones;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -25,10 +29,14 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 // Inyección de dependencias de Repositorios
 builder.Services.AddScoped<IPacienteRepository, PacienteRepository>();
 builder.Services.AddScoped<IProfesionalRepository, ProfesionalRepository>();
+builder.Services.AddScoped<IInformeRepository, InformeRepository>();
+builder.Services.AddScoped<IReunionRepository, ReunionRepository>();
 
 // Inyección de dependencias de Servicios
 builder.Services.AddScoped<IPacienteService, PacienteService>();
 builder.Services.AddScoped<IProfesionalService, ProfesionalService>();
+builder.Services.AddScoped<IInformeService, InformeService>();
+builder.Services.AddScoped<IReunionService, ReunionService>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
