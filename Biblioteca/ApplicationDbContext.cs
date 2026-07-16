@@ -13,9 +13,13 @@ namespace Biblioteca.Repository
         public DbSet<Profesional> Profesionales { get; set; }
         public DbSet<Paciente> Pacientes { get; set; }
         public DbSet<PacienteProfesional> PacienteProfesionales { get; set; }
+        // Tablas Branch feature/turnos
         public DbSet<TurnoFijo> TurnosFijos { get; set; }
         public DbSet<Turno> Turnos { get; set; }
         public DbSet<Asistencia> Asistencias { get; set; }
+        //Tablas Branch feature/informe-reuniones
+        public DbSet<Informe> Informes { get; set; }
+        public DbSet<Reunion> Reuniones { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +48,26 @@ namespace Biblioteca.Repository
                 .HasOne(pp => pp.Profesional)
                 .WithMany(p => p.PacienteProfesionales)
                 .HasForeignKey(pp => pp.ProfesionalId);
+
+            // Configure Informe relationships
+            modelBuilder.Entity<Informe>()
+                .HasOne(i => i.Paciente)
+                .WithMany(p => p.Informes)
+                .HasForeignKey(i => i.PacienteId)
+                .OnDelete(DeleteBehavior.SetNull); // Or NoAction, depending on requirements
+
+            modelBuilder.Entity<Informe>()
+                .HasOne(i => i.Profesional)
+                .WithMany(p => p.Informes)
+                .HasForeignKey(i => i.ProfesionalId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Reunion relationships
+            modelBuilder.Entity<Reunion>()
+                .HasOne(r => r.Profesional)
+                .WithMany(p => p.Reuniones)
+                .HasForeignKey(r => r.ProfesionalId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

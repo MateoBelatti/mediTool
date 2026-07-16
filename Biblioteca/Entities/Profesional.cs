@@ -53,5 +53,7 @@ namespace Biblioteca.Entities
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
         public ICollection<PacienteProfesional> PacienteProfesionales { get; set; } = new List<PacienteProfesional>();
+        public ICollection<Informe> Informes { get; set; } = new List<Informe>();
+        public ICollection<Reunion> Reuniones { get; set; } = new List<Reunion>();
     }
 }

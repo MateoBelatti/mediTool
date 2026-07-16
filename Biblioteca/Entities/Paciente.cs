@@ -51,5 +51,6 @@ namespace Biblioteca.Entities
         public DateTime? CreatedAt { get; set; }
 
         public ICollection<PacienteProfesional> PacienteProfesionales { get; set; } = new List<PacienteProfesional>();
+        public ICollection<Informe> Informes { get; set; } = new List<Informe>();
     }
 }

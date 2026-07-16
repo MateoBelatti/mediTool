@@ -3,9 +3,13 @@ using Biblioteca.Entities;
 using Utils.DTO;
 using Utils.DTOs.Paciente;
 using Utils.DTOs.Profesional;
+// Branch feature/turnos
 using Utils.DTOs.TurnoFijo;
 using Utils.DTOs.Turno;
 using Utils.DTOs.Asistencia;
+// Branch feature/informe-reuniones
+using Utils.DTOs.Informe;
+using Utils.DTOs.Reunion;
 
 namespace mediTool.Mappers
 {
@@ -54,6 +58,35 @@ namespace mediTool.Mappers
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.TurnoId, opt => opt.Ignore())
                 .ForMember(dest => dest.FechaRegistro, opt => opt.Ignore());
+
+            // Mapeos de Informe
+            CreateMap<InformeCreateDto, Informe>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Paciente, opt => opt.Ignore())
+                .ForMember(dest => dest.Profesional, opt => opt.Ignore());
+
+            CreateMap<InformeUpdateDto, Informe>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Paciente, opt => opt.Ignore())
+                .ForMember(dest => dest.Profesional, opt => opt.Ignore());
+
+            CreateMap<Informe, InformeResponseDto>();
+
+            // Mapeos de Reunion
+            CreateMap<ReunionCreateDto, Reunion>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Profesional, opt => opt.Ignore());
+
+            CreateMap<ReunionUpdateDto, Reunion>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Profesional, opt => opt.Ignore());
+
+            CreateMap<Reunion, ReunionResponseDto>();
+
         }
     }
 }
