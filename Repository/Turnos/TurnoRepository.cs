@@ -13,6 +13,11 @@ namespace Repository.Turnos
             _context = context;
         }
 
+        private DateTime ToUtc(DateTime date)
+        {
+            return date.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(date, DateTimeKind.Utc) : date.ToUniversalTime();
+        }
+
         public async Task Actualizar(Turno turno)
         {
             _context.Turnos.Update(turno);
@@ -32,6 +37,7 @@ namespace Repository.Turnos
 
         public async Task<bool> ExisteSolapamiento(int profesionalId, DateTime fechaHora, int duracionMin, int? excluirTurnoId = null)
         {
+            fechaHora = ToUtc(fechaHora);
             var finNuevo = fechaHora.AddMinutes(duracionMin);
             return await _context.Turnos.AnyAsync(t => 
                 t.ProfesionalId == profesionalId &&
@@ -48,6 +54,7 @@ namespace Repository.Turnos
 
         public async Task<List<Turno>> ObtenerFuturosPorTurnoFijo(int turnoFijoId, DateTime desde)
         {
+            desde = ToUtc(desde);
             return await _context.Turnos
                 .Where(t => t.TurnoFijoId == turnoFijoId && t.FechaHora >= desde)
                 .OrderBy(t => t.FechaHora)
@@ -62,6 +69,8 @@ namespace Repository.Turnos
 
         public async Task<List<Turno>> ObtenerPorRangoFecha(DateTime desde, DateTime hasta, int? profesionalId = null)
         {
+            desde = ToUtc(desde);
+            hasta = ToUtc(hasta);
             var query = _context.Turnos
                 .Where(t => t.FechaHora >= desde && t.FechaHora <= hasta);
             

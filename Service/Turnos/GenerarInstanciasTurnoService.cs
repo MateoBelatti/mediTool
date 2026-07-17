@@ -33,7 +33,7 @@ namespace Service.Turnos
             var turnosGenerados = new List<Turno>();
             while (fechaActual.ToDateTime(TimeOnly.MinValue) <= limite)
             {
-                var fechaHora = fechaActual.ToDateTime(TimeOnly.FromTimeSpan(regla.Hora));
+                var fechaHora = DateTime.SpecifyKind(fechaActual.ToDateTime(TimeOnly.FromTimeSpan(regla.Hora)), DateTimeKind.Utc);
                 
                 var turno = new Turno
                 {
@@ -84,7 +84,7 @@ namespace Service.Turnos
 
                 var newTime = TimeOnly.FromTimeSpan(reglaActualizada.Hora);
                 
-                turno.FechaHora = dateOnly.ToDateTime(newTime);
+                turno.FechaHora = DateTime.SpecifyKind(dateOnly.ToDateTime(newTime), DateTimeKind.Utc);
                 turno.DuracionMin = reglaActualizada.DuracionMin;
             }
 

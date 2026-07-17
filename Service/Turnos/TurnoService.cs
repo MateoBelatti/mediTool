@@ -36,6 +36,7 @@ namespace Service.Turnos
             }
 
             var turno = _mapper.Map<Turno>(dto);
+            turno.FechaHora = turno.FechaHora.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(turno.FechaHora, DateTimeKind.Utc) : turno.FechaHora.ToUniversalTime();
             await _turnoRepository.Agregar(turno);
             await _turnoRepository.GuardarCambios();
 
@@ -67,7 +68,7 @@ namespace Service.Turnos
                 throw new ConflictError("Ya existe un turno para este profesional en el nuevo horario.");
             }
 
-            turno.FechaHora = nuevaFechaHora;
+            turno.FechaHora = nuevaFechaHora.Kind == DateTimeKind.Unspecified ? DateTime.SpecifyKind(nuevaFechaHora, DateTimeKind.Utc) : nuevaFechaHora.ToUniversalTime();
             turno.Estado = EstadoTurno.Reprogramado.ToString();
             await _turnoRepository.Actualizar(turno);
             await _turnoRepository.GuardarCambios();

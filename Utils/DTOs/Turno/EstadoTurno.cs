@@ -3,7 +3,7 @@ namespace Utils.DTOs.Turno
     public enum EstadoTurno
     {
         Pendiente,
-        Completado,
+        Presente,
         Cancelado,
         Reprogramado,
         Ausente
