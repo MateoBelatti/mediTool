@@ -39,6 +39,7 @@ namespace Service.Informes
         {
             var informe = _mapper.Map<Informe>(dto);
             var created = await _informeRepository.AddAsync(informe);
+            await _informeRepository.GuardarCambios();
             return _mapper.Map<InformeResponseDto>(created);
         }
 
@@ -49,6 +50,7 @@ namespace Service.Informes
 
             _mapper.Map(dto, existing);
             var updated = await _informeRepository.UpdateAsync(existing);
+            await _informeRepository.GuardarCambios();
             return _mapper.Map<InformeResponseDto>(updated);
         }
 
@@ -57,7 +59,9 @@ namespace Service.Informes
             var existing = await _informeRepository.GetByIdAsync(id);
             if (existing == null) return false;
 
-            return await _informeRepository.DeleteAsync(existing);
+            var success = await _informeRepository.DeleteAsync(existing);
+            await _informeRepository.GuardarCambios();
+            return success;
         }
     }
 }

@@ -46,6 +46,7 @@ namespace Service.Profesionales
                 entity.Password = BCrypt.Net.BCrypt.HashPassword(entity.Password);
             }
             var result = await _repository.AddAsync(entity);
+            await _repository.GuardarCambios();
             return _mapper.Map<ProfesionalResponseDto>(result);
         }
 
@@ -70,6 +71,7 @@ namespace Service.Profesionales
 
             _mapper.Map(dto, existing);
             var result = await _repository.UpdateAsync(existing);
+            await _repository.GuardarCambios();
             return _mapper.Map<ProfesionalResponseDto>(result);
         }
 
@@ -77,7 +79,10 @@ namespace Service.Profesionales
         {
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null) return false;
-            return await _repository.DeleteAsync(existing);
+
+            var success = await _repository.DeleteAsync(existing);
+            await _repository.GuardarCambios();
+            return success;
         }
 
         public async Task<ProfesionalResponseDto?> GetByIdAsync(int id)
@@ -101,6 +106,7 @@ namespace Service.Profesionales
         public async Task VincularPacienteAsync(int profesionalId, int pacienteId)
         {
             await _repository.VincularPacienteAsync(profesionalId, pacienteId);
+            await _repository.GuardarCambios();
         }
 
         public async Task<IEnumerable<Utils.DTOs.Paciente.PacienteResponseDto>> GetPacientesVinculadosAsync(int profesionalId)

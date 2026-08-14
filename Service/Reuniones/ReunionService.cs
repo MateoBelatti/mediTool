@@ -39,6 +39,7 @@ namespace Service.Reuniones
         {
             var reunion = _mapper.Map<Reunion>(dto);
             var created = await _reunionRepository.AddAsync(reunion);
+            await _reunionRepository.GuardarCambios();
             return _mapper.Map<ReunionResponseDto>(created);
         }
 
@@ -49,6 +50,7 @@ namespace Service.Reuniones
 
             _mapper.Map(dto, existing);
             var updated = await _reunionRepository.UpdateAsync(existing);
+            await _reunionRepository.GuardarCambios();
             return _mapper.Map<ReunionResponseDto>(updated);
         }
 
@@ -57,7 +59,9 @@ namespace Service.Reuniones
             var existing = await _reunionRepository.GetByIdAsync(id);
             if (existing == null) return false;
 
-            return await _reunionRepository.DeleteAsync(existing);
+            var success = await _reunionRepository.DeleteAsync(existing);
+            await _reunionRepository.GuardarCambios();
+            return success;
         }
     }
 }

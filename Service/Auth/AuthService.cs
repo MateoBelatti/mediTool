@@ -62,6 +62,7 @@ namespace Service.Auth
             profesional.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(days);
 
             await _profesionalRepository.UpdateAsync(profesional);
+            await _profesionalRepository.GuardarCambios();
         }
     }
 }

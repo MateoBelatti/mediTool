@@ -52,6 +52,7 @@ namespace Service.Pacientes
             entity.Email = normalizedEmail;
             entity.Dni = normalizedDni;
             var result = await _repository.AddAsync(entity);
+            await _repository.GuardarCambios();
             return _mapper.Map<PacienteResponseDto>(result);
         }
 
@@ -83,6 +84,7 @@ namespace Service.Pacientes
             existing.Email = normalizedEmail;
             existing.Dni = normalizedDni;
             var result = await _repository.UpdateAsync(existing);
+            await _repository.GuardarCambios();
             return _mapper.Map<PacienteResponseDto>(result);
         }
 
@@ -90,7 +92,10 @@ namespace Service.Pacientes
         {
             var existing = await _repository.GetByIdAsync(id);
             if (existing == null) return false;
-            return await _repository.DeleteAsync(existing);
+
+            var success = await _repository.DeleteAsync(existing);
+            await _repository.GuardarCambios();
+            return success;
         }
 
         public async Task<PacienteResponseDto?> GetByIdAsync(int id)
