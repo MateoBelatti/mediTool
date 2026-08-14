@@ -26,14 +26,17 @@ namespace Repository.Pacientes
         public async Task<Paciente> AddAsync(Paciente entity)
         {
             _context.Pacientes.Add(entity);
-            await _context.SaveChangesAsync();
             return entity;
+        }
+
+        public async Task GuardarCambios()
+        {
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Paciente> UpdateAsync(Paciente entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
             return entity;
         }
 
@@ -43,7 +46,6 @@ namespace Repository.Pacientes
             if (existing == null) return false;
             
             _context.Pacientes.Remove(existing);
-            await _context.SaveChangesAsync();
             return true;
         }
 

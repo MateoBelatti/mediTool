@@ -13,5 +13,6 @@ namespace Repository.Pacientes
         Task<Paciente?> GetByDniAsync(string dni);
         Task<Paciente?> GetByEmailAsync(string email);
         Task<IEnumerable<Paciente>> GetByObraSocialAsync(string obraSocial);
+        Task GuardarCambios();
     }
 }

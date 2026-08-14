@@ -10,5 +10,6 @@ namespace Repository.Reuniones
         Task<Reunion> AddAsync(Reunion entity);
         Task<Reunion> UpdateAsync(Reunion entity);
         Task<bool> DeleteAsync(Reunion entity);
+        Task GuardarCambios();
     }
 }

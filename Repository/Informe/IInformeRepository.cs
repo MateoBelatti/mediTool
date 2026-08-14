@@ -10,5 +10,6 @@ namespace Repository.Informes
         Task<Informe> AddAsync(Informe entity);
         Task<Informe> UpdateAsync(Informe entity);
         Task<bool> DeleteAsync(Informe entity);
+        Task GuardarCambios();
     }
 }

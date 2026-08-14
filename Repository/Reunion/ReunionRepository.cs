@@ -34,21 +34,23 @@ namespace Repository.Reuniones
         {
             entity.CreatedAt = DateTime.UtcNow;
             await _context.Reuniones.AddAsync(entity);
-            await _context.SaveChangesAsync();
             return entity;
+        }
+
+        public async Task GuardarCambios()
+        {
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Reunion> UpdateAsync(Reunion entity)
         {
             _context.Reuniones.Update(entity);
-            await _context.SaveChangesAsync();
             return entity;
         }
 
         public async Task<bool> DeleteAsync(Reunion entity)
         {
             _context.Reuniones.Remove(entity);
-            await _context.SaveChangesAsync();
             return true;
         }
     }

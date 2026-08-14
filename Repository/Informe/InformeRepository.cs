@@ -34,21 +34,23 @@ namespace Repository.Informes
         {
             entity.CreatedAt = DateTime.UtcNow;
             await _context.Informes.AddAsync(entity);
-            await _context.SaveChangesAsync();
             return entity;
+        }
+
+        public async Task GuardarCambios()
+        {
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Informe> UpdateAsync(Informe entity)
         {
             _context.Informes.Update(entity);
-            await _context.SaveChangesAsync();
             return entity;
         }
 
         public async Task<bool> DeleteAsync(Informe entity)
         {
             _context.Informes.Remove(entity);
-            await _context.SaveChangesAsync();
             return true;
         }
     }

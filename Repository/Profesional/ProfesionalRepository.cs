@@ -21,14 +21,17 @@ namespace Repository.Profesionales
         public async Task<Profesional> AddAsync(Profesional entity)
         {
             _context.Profesionales.Add(entity);
-            await _context.SaveChangesAsync();
             return entity;
+        }
+
+        public async Task GuardarCambios()
+        {
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Profesional> UpdateAsync(Profesional entity)
         {
             _context.Entry(entity).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
             return entity;
         }
 
@@ -38,7 +41,6 @@ namespace Repository.Profesionales
             if (existing == null) return false;
             
             _context.Profesionales.Remove(existing);
-            await _context.SaveChangesAsync();
             return true;
         }
 
@@ -78,7 +80,6 @@ namespace Repository.Profesionales
             if (!exists)
             {
                 _context.PacienteProfesionales.Add(vinculacion);
-                await _context.SaveChangesAsync();
             }
         }
 

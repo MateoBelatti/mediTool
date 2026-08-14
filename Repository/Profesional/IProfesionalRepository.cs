@@ -14,5 +14,6 @@ namespace Repository.Profesionales
         Task<Profesional?> GetByRefreshTokenAsync(string refreshToken);
         Task VincularPacienteAsync(int profesionalId, int pacienteId);
         Task<IEnumerable<Paciente>> GetPacientesVinculadosAsync(int profesionalId);
+        Task GuardarCambios();
     }
 }
