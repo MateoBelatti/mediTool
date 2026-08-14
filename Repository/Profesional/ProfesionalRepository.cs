@@ -15,11 +15,13 @@ namespace Repository.Profesionales
 
         public async Task<Profesional?> GetAsync(Profesional entity)
         {
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
             return await _context.Profesionales.FirstOrDefaultAsync(p => p.Id == entity.Id);
         }
 
         public async Task<Profesional> AddAsync(Profesional entity)
         {
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
             _context.Profesionales.Add(entity);
             return entity;
         }
@@ -31,12 +33,16 @@ namespace Repository.Profesionales
 
         public async Task<Profesional> UpdateAsync(Profesional entity)
         {
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
             _context.Entry(entity).State = EntityState.Modified;
             return entity;
         }
 
         public async Task<bool> DeleteAsync(Profesional entity)
         {
+            ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+            if (entity.Id <= 0)
+                throw new ArgumentOutOfRangeException(nameof(entity.Id), "El id debe ser mayor que 0.");
             var existing = await _context.Profesionales.FindAsync(entity.Id);
             if (existing == null) return false;
             
@@ -46,26 +52,35 @@ namespace Repository.Profesionales
 
         public async Task<Profesional?> GetByIdAsync(int id)
         {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException(nameof(id), "El id debe ser mayor que 0.");
             return await _context.Profesionales.FindAsync(id);
         }
 
         public async Task<Profesional?> GetByEmailAsync(string email)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(email, nameof(email));
             return await _context.Profesionales.FirstOrDefaultAsync(p => p.Email == email);
         }
 
         public async Task<Profesional?> GetByMatriculaAsync(string matricula)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(matricula, nameof(matricula));
             return await _context.Profesionales.FirstOrDefaultAsync(p => p.Matricula == matricula);
         }
 
         public async Task<Profesional?> GetByRefreshTokenAsync(string refreshToken)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(refreshToken, nameof(refreshToken));
             return await _context.Profesionales.FirstOrDefaultAsync(p => p.RefreshToken == refreshToken);
         }
 
         public async Task VincularPacienteAsync(int profesionalId, int pacienteId)
         {
+            if (profesionalId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(profesionalId), "El id debe ser mayor que 0.");
+            if (pacienteId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(pacienteId), "El id debe ser mayor que 0.");
             var vinculacion = new PacienteProfesional
             {
                 ProfesionalId = profesionalId,
@@ -85,6 +100,8 @@ namespace Repository.Profesionales
 
         public async Task<IEnumerable<Paciente>> GetPacientesVinculadosAsync(int profesionalId)
         {
+            if (profesionalId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(profesionalId), "El id debe ser mayor que 0.");
             return await _context.PacienteProfesionales
                 .Where(pp => pp.ProfesionalId == profesionalId)
                 .Select(pp => pp.Paciente)

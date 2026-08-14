@@ -15,12 +15,14 @@ namespace Repository.TurnosFijos
 
         public async Task Actualizar(TurnoFijo turnoFijo)
         {
+            ArgumentNullException.ThrowIfNull(turnoFijo, nameof(turnoFijo));
             _context.TurnosFijos.Update(turnoFijo);
             await Task.CompletedTask;
         }
 
         public async Task Agregar(TurnoFijo turnoFijo)
         {
+            ArgumentNullException.ThrowIfNull(turnoFijo, nameof(turnoFijo));
             await _context.TurnosFijos.AddAsync(turnoFijo);
         }
 
@@ -38,12 +40,16 @@ namespace Repository.TurnosFijos
 
         public async Task<TurnoFijo?> ObtenerPorId(int id)
         {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException(nameof(id), "El id debe ser mayor que 0.");
             return await _context.TurnosFijos
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
         public async Task<List<TurnoFijo>> ObtenerPorProfesional(int profesionalId)
         {
+            if (profesionalId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(profesionalId), "El id debe ser mayor que 0.");
             return await _context.TurnosFijos
                 .Where(t => t.ProfesionalId == profesionalId)
                 .ToListAsync();

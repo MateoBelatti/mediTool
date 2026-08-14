@@ -20,23 +20,28 @@ namespace Repository.Turnos
 
         public async Task Actualizar(Turno turno)
         {
+            ArgumentNullException.ThrowIfNull(turno, nameof(turno));
             _context.Turnos.Update(turno);
             await Task.CompletedTask;
         }
 
         public async Task ActualizarRango(List<Turno> turnos)
         {
+            ArgumentNullException.ThrowIfNull(turnos, nameof(turnos));
             _context.Turnos.UpdateRange(turnos);
             await Task.CompletedTask;
         }
 
         public async Task Agregar(Turno turno)
         {
+            ArgumentNullException.ThrowIfNull(turno, nameof(turno));
             await _context.Turnos.AddAsync(turno);
         }
 
         public async Task<bool> ExisteSolapamiento(int profesionalId, DateTime fechaHora, int duracionMin, int? excluirTurnoId = null)
         {
+            if (profesionalId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(profesionalId), "El id debe ser mayor que 0.");
             fechaHora = ToUtc(fechaHora);
             var finNuevo = fechaHora.AddMinutes(duracionMin);
             return await _context.Turnos.AnyAsync(t => 
@@ -54,6 +59,8 @@ namespace Repository.Turnos
 
         public async Task<List<Turno>> ObtenerFuturosPorTurnoFijo(int turnoFijoId, DateTime desde)
         {
+            if (turnoFijoId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(turnoFijoId), "El id debe ser mayor que 0.");
             desde = ToUtc(desde);
             return await _context.Turnos
                 .Where(t => t.TurnoFijoId == turnoFijoId && t.FechaHora >= desde)
@@ -63,6 +70,8 @@ namespace Repository.Turnos
 
         public async Task<Turno?> ObtenerPorId(int id)
         {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException(nameof(id), "El id debe ser mayor que 0.");
             return await _context.Turnos
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
@@ -84,6 +93,8 @@ namespace Repository.Turnos
 
         public async Task<Turno?> ObtenerUltimoPorTurnoFijo(int turnoFijoId)
         {
+            if (turnoFijoId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(turnoFijoId), "El id debe ser mayor que 0.");
             return await _context.Turnos
                 .Where(t => t.TurnoFijoId == turnoFijoId)
                 .OrderByDescending(t => t.FechaHora)
