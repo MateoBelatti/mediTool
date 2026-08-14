@@ -21,6 +21,9 @@ namespace Repository.Turnos
         public async Task Actualizar(Turno turno)
         {
             ArgumentNullException.ThrowIfNull(turno, nameof(turno));
+            var existe = await _context.Turnos.AnyAsync(t => t.Id == turno.Id);
+            if (!existe)
+                throw new KeyNotFoundException($"Turno {turno.Id} no encontrado.");
             _context.Turnos.Update(turno);
             await Task.CompletedTask;
         }

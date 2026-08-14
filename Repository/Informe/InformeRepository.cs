@@ -50,6 +50,9 @@ namespace Repository.Informes
         public async Task<Informe> UpdateAsync(Informe entity)
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+            var existe = await _context.Informes.AnyAsync(i => i.Id == entity.Id);
+            if (!existe)
+                throw new KeyNotFoundException($"Informe {entity.Id} no encontrado.");
             _context.Informes.Update(entity);
             return entity;
         }
@@ -59,7 +62,9 @@ namespace Repository.Informes
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
             if (entity.Id <= 0)
                 throw new ArgumentOutOfRangeException(nameof(entity.Id), "El id debe ser mayor que 0.");
-            _context.Informes.Remove(entity);
+            var existing = await _context.Informes.FindAsync(entity.Id);
+            if (existing == null) return false;
+            _context.Informes.Remove(existing);
             return true;
         }
     }

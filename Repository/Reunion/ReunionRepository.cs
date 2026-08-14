@@ -50,6 +50,9 @@ namespace Repository.Reuniones
         public async Task<Reunion> UpdateAsync(Reunion entity)
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
+            var existe = await _context.Reuniones.AnyAsync(r => r.Id == entity.Id);
+            if (!existe)
+                throw new KeyNotFoundException($"Reunion {entity.Id} no encontrado.");
             _context.Reuniones.Update(entity);
             return entity;
         }
@@ -59,7 +62,9 @@ namespace Repository.Reuniones
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
             if (entity.Id <= 0)
                 throw new ArgumentOutOfRangeException(nameof(entity.Id), "El id debe ser mayor que 0.");
-            _context.Reuniones.Remove(entity);
+            var existing = await _context.Reuniones.FindAsync(entity.Id);
+            if (existing == null) return false;
+            _context.Reuniones.Remove(existing);
             return true;
         }
     }

@@ -16,6 +16,9 @@ namespace Repository.TurnosFijos
         public async Task Actualizar(TurnoFijo turnoFijo)
         {
             ArgumentNullException.ThrowIfNull(turnoFijo, nameof(turnoFijo));
+            var existe = await _context.TurnosFijos.AnyAsync(t => t.Id == turnoFijo.Id);
+            if (!existe)
+                throw new KeyNotFoundException($"TurnoFijo {turnoFijo.Id} no encontrado.");
             _context.TurnosFijos.Update(turnoFijo);
             await Task.CompletedTask;
         }
