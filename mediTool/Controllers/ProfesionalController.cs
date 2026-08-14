@@ -28,6 +28,7 @@ namespace mediTool.Controllers
             return Ok(profesional);
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ProfesionalCreateDto dto)
         {
