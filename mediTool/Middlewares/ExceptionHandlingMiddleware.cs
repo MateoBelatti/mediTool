@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 using Utils.Exceptions;
 using Utils.DTO.Api;
 
@@ -49,6 +50,11 @@ namespace mediTool.Middlewares
                         details.Add(internalEx.Message);
                         details.AddRange(internalEx.Details);
                     }
+                    break;
+                case DbUpdateException:
+                    statusCode = HttpStatusCode.Conflict;
+                    message = "No se puede eliminar el recurso porque tiene registros asociados.";
+                    details.Add(exception.Message);
                     break;
                 case AppException appEx:
                     statusCode = appEx.StatusCode;
