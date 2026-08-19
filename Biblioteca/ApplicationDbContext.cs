@@ -42,19 +42,21 @@ namespace Biblioteca.Repository
             modelBuilder.Entity<PacienteProfesional>()
                 .HasOne(pp => pp.Paciente)
                 .WithMany(p => p.PacienteProfesionales)
-                .HasForeignKey(pp => pp.PacienteId);
+                .HasForeignKey(pp => pp.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<PacienteProfesional>()
                 .HasOne(pp => pp.Profesional)
                 .WithMany(p => p.PacienteProfesionales)
-                .HasForeignKey(pp => pp.ProfesionalId);
+                .HasForeignKey(pp => pp.ProfesionalId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Configure Informe relationships
             modelBuilder.Entity<Informe>()
                 .HasOne(i => i.Paciente)
                 .WithMany(p => p.Informes)
                 .HasForeignKey(i => i.PacienteId)
-                .OnDelete(DeleteBehavior.SetNull); // Or NoAction, depending on requirements
+                .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Informe>()
                 .HasOne(i => i.Profesional)
@@ -67,7 +69,46 @@ namespace Biblioteca.Repository
                 .HasOne(r => r.Profesional)
                 .WithMany(p => p.Reuniones)
                 .HasForeignKey(r => r.ProfesionalId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure TurnoFijo relationships
+            modelBuilder.Entity<TurnoFijo>()
+                .HasOne(tf => tf.Paciente)
+                .WithMany()
+                .HasForeignKey(tf => tf.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TurnoFijo>()
+                .HasOne(tf => tf.Profesional)
+                .WithMany()
+                .HasForeignKey(tf => tf.ProfesionalId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Turno relationships
+            modelBuilder.Entity<Turno>()
+                .HasOne(t => t.Paciente)
+                .WithMany()
+                .HasForeignKey(t => t.PacienteId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Turno>()
+                .HasOne(t => t.Profesional)
+                .WithMany()
+                .HasForeignKey(t => t.ProfesionalId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Turno>()
+                .HasOne(t => t.TurnoFijo)
+                .WithMany(tf => tf.Turnos)
+                .HasForeignKey(t => t.TurnoFijoId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Configure Asistencia relationships
+            modelBuilder.Entity<Asistencia>()
+                .HasOne(a => a.Turno)
+                .WithMany(t => t.Asistencias)
+                .HasForeignKey(a => a.TurnoId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
