@@ -26,6 +26,7 @@ namespace Service.TurnosFijos
         public async Task<TurnoFijo> Crear(CrearTurnoFijoDto dto)
         {
             var turnoFijo = _mapper.Map<TurnoFijo>(dto);
+            ValidarReglas(turnoFijo);
             await _turnoFijoRepository.Agregar(turnoFijo);
             await _turnoFijoRepository.GuardarCambios();
             
@@ -56,6 +57,7 @@ namespace Service.TurnosFijos
                 throw new NotFoundError($"TurnoFijo {turnoFijoId} no encontrado");
 
             _mapper.Map(dto, turnoFijo);
+            ValidarReglas(turnoFijo);
             await _turnoFijoRepository.Actualizar(turnoFijo);
             await _turnoFijoRepository.GuardarCambios();
             
@@ -68,6 +70,21 @@ namespace Service.TurnosFijos
         public async Task<List<TurnoFijo>> ListarPorProfesional(int profesionalId)
         {
             return await _turnoFijoRepository.ObtenerPorProfesional(profesionalId);
+        }
+
+        private static void ValidarReglas(TurnoFijo turnoFijo)
+        {
+            if (turnoFijo.DiaSemana is < 0 or > 6)
+                throw new ValidationError(
+                    $"El DiaSemana debe estar entre 0 (Domingo) y 6 (Sábado). Valor recibido: {turnoFijo.DiaSemana}.");
+
+            if (turnoFijo.DuracionMin <= 0)
+                throw new ValidationError(
+                    $"La DuracionMin debe ser mayor a 0. Valor recibido: {turnoFijo.DuracionMin}.");
+
+            if (turnoFijo.FechaFin.HasValue && turnoFijo.FechaInicio > turnoFijo.FechaFin.Value)
+                throw new ValidationError(
+                    $"La FechaInicio ({turnoFijo.FechaInicio}) debe ser menor o igual a la FechaFin ({turnoFijo.FechaFin.Value}).");
         }
     }
 }
