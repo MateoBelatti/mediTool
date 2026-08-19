@@ -23,14 +23,16 @@ namespace Service.Asistencias
             _mapper = mapper;
         }
 
-        public async Task<List<Asistencia>> ObtenerFacturables(int pacienteId, DateTime desde, DateTime hasta)
+        public async Task<List<AsistenciaResponseDto>> ObtenerFacturables(int pacienteId, DateTime desde, DateTime hasta)
         {
-            return await _asistenciaRepository.ObtenerFacturables(pacienteId, desde, hasta);
+            var asistencias = await _asistenciaRepository.ObtenerFacturables(pacienteId, desde, hasta);
+            return _mapper.Map<List<AsistenciaResponseDto>>(asistencias);
         }
 
-        public async Task<Asistencia?> ObtenerPorTurno(int turnoId)
+        public async Task<AsistenciaResponseDto?> ObtenerPorTurno(int turnoId)
         {
-            return await _asistenciaRepository.ObtenerPorTurnoId(turnoId);
+            var asistencia = await _asistenciaRepository.ObtenerPorTurnoId(turnoId);
+            return _mapper.Map<AsistenciaResponseDto>(asistencia);
         }
 
         public async Task<ResumenAsistenciaDto> ObtenerResumenPorTurnoFijo(int turnoFijoId)
@@ -53,7 +55,7 @@ namespace Service.Asistencias
             };
         }
 
-        public async Task<Asistencia> RegistrarAsistencia(int turnoId, bool asistio, bool? justificada, string? observaciones)
+        public async Task<AsistenciaResponseDto> RegistrarAsistencia(int turnoId, bool asistio, bool? justificada, string? observaciones)
         {
             var turno = await _turnoRepository.ObtenerPorId(turnoId);
             if (turno == null)
@@ -75,10 +77,10 @@ namespace Service.Asistencias
             await _asistenciaRepository.Agregar(asistencia);
             await _asistenciaRepository.GuardarCambios();
 
-            return asistencia;
+            return _mapper.Map<AsistenciaResponseDto>(asistencia);
         }
 
-        public async Task<Asistencia> ActualizarAsistencia(int turnoId, ActualizarAsistenciaDto dto)
+        public async Task<AsistenciaResponseDto> ActualizarAsistencia(int turnoId, ActualizarAsistenciaDto dto)
         {
             var asistencia = await _asistenciaRepository.ObtenerPorTurnoId(turnoId);
             if (asistencia == null)
@@ -88,7 +90,7 @@ namespace Service.Asistencias
             await _asistenciaRepository.Actualizar(asistencia);
             await _asistenciaRepository.GuardarCambios();
             
-            return asistencia;
+            return _mapper.Map<AsistenciaResponseDto>(asistencia);
         }
     }
 }

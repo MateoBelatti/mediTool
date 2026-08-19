@@ -23,7 +23,7 @@ namespace Service.TurnosFijos
             _mapper = mapper;
         }
 
-        public async Task<TurnoFijo> Crear(CrearTurnoFijoDto dto)
+        public async Task<TurnoFijoResponseDto> Crear(CrearTurnoFijoDto dto)
         {
             var turnoFijo = _mapper.Map<TurnoFijo>(dto);
             ValidarReglas(turnoFijo);
@@ -33,7 +33,7 @@ namespace Service.TurnosFijos
             // Generar instancias para los próximos 3 meses
             await _generarInstanciasService.GenerarInstancias(turnoFijo, DateTime.Now.AddMonths(3));
             
-            return turnoFijo;
+            return _mapper.Map<TurnoFijoResponseDto>(turnoFijo);
         }
 
         public async Task Desactivar(int turnoFijoId)
@@ -50,7 +50,7 @@ namespace Service.TurnosFijos
             await _generarInstanciasService.CancelarInstanciasFuturas(turnoFijoId);
         }
 
-        public async Task<TurnoFijo> Editar(int turnoFijoId, EditarTurnoFijoDto dto)
+        public async Task<TurnoFijoResponseDto> Editar(int turnoFijoId, EditarTurnoFijoDto dto)
         {
             var turnoFijo = await _turnoFijoRepository.ObtenerPorId(turnoFijoId);
             if (turnoFijo == null)
@@ -64,12 +64,13 @@ namespace Service.TurnosFijos
             // Actualizar los turnos que ya se habían programado a futuro con la vieja regla
             await _generarInstanciasService.ActualizarInstanciasFuturas(turnoFijo);
             
-            return turnoFijo;
+            return _mapper.Map<TurnoFijoResponseDto>(turnoFijo);
         }
 
-        public async Task<List<TurnoFijo>> ListarPorProfesional(int profesionalId)
+        public async Task<List<TurnoFijoResponseDto>> ListarPorProfesional(int profesionalId)
         {
-            return await _turnoFijoRepository.ObtenerPorProfesional(profesionalId);
+            var turnosFijos = await _turnoFijoRepository.ObtenerPorProfesional(profesionalId);
+            return _mapper.Map<List<TurnoFijoResponseDto>>(turnosFijos);
         }
 
         private static void ValidarReglas(TurnoFijo turnoFijo)

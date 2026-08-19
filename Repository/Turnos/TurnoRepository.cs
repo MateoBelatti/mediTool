@@ -76,6 +76,8 @@ namespace Repository.Turnos
             if (id <= 0)
                 throw new ArgumentOutOfRangeException(nameof(id), "El id debe ser mayor que 0.");
             return await _context.Turnos
+                .Include(t => t.Paciente)
+                .Include(t => t.Profesional)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
@@ -84,6 +86,8 @@ namespace Repository.Turnos
             desde = ToUtc(desde);
             hasta = ToUtc(hasta);
             var query = _context.Turnos
+                .Include(t => t.Paciente)
+                .Include(t => t.Profesional)
                 .Where(t => t.FechaHora >= desde && t.FechaHora <= hasta);
             
             if (profesionalId.HasValue)

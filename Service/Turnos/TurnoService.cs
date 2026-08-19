@@ -38,7 +38,7 @@ namespace Service.Turnos
             await _turnoRepository.GuardarCambios();
         }
 
-        public async Task<Turno> CrearSuelto(CrearTurnoDto dto)
+        public async Task<TurnoResponseDto> CrearSuelto(CrearTurnoDto dto)
         {
             if (await _pacienteRepository.GetByIdAsync(dto.PacienteId) == null)
                 throw new ValidationError($"El Paciente con Id {dto.PacienteId} no existe.");
@@ -56,21 +56,22 @@ namespace Service.Turnos
             await _turnoRepository.Agregar(turno);
             await _turnoRepository.GuardarCambios();
 
-            return turno;
+            return _mapper.Map<TurnoResponseDto>(turno);
         }
 
-        public async Task<List<Turno>> ObtenerAgenda(DateTime desde, DateTime hasta, int? profesionalId)
+        public async Task<List<TurnoResponseDto>> ObtenerAgenda(DateTime desde, DateTime hasta, int? profesionalId)
         {
-            return await _turnoRepository.ObtenerPorRangoFecha(desde, hasta, profesionalId);
+            var turnos = await _turnoRepository.ObtenerPorRangoFecha(desde, hasta, profesionalId);
+            return _mapper.Map<List<TurnoResponseDto>>(turnos);
         }
 
-        public async Task<Turno> ObtenerPorId(int id)
+        public async Task<TurnoResponseDto> ObtenerPorId(int id)
         {
             var turno = await _turnoRepository.ObtenerPorId(id);
             if (turno == null)
                 throw new NotFoundError($"Turno {id} no encontrado");
             
-            return turno;
+            return _mapper.Map<TurnoResponseDto>(turno);
         }
 
         public async Task Reprogramar(int turnoId, DateTime nuevaFechaHora)

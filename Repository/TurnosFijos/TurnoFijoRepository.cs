@@ -46,6 +46,8 @@ namespace Repository.TurnosFijos
             if (id <= 0)
                 throw new ArgumentOutOfRangeException(nameof(id), "El id debe ser mayor que 0.");
             return await _context.TurnosFijos
+                .Include(t => t.Paciente)
+                .Include(t => t.Profesional)
                 .FirstOrDefaultAsync(t => t.Id == id);
         }
 
@@ -54,6 +56,8 @@ namespace Repository.TurnosFijos
             if (profesionalId <= 0)
                 throw new ArgumentOutOfRangeException(nameof(profesionalId), "El id debe ser mayor que 0.");
             return await _context.TurnosFijos
+                .Include(t => t.Paciente)
+                .Include(t => t.Profesional)
                 .Where(t => t.ProfesionalId == profesionalId)
                 .ToListAsync();
         }
