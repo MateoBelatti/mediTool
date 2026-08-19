@@ -1,6 +1,7 @@
 using AutoMapper;
 using Biblioteca.Entities;
 using Utils.DTO;
+using Utils.DTOs.Comun;
 using Utils.DTOs.Paciente;
 using Utils.DTOs.Profesional;
 // Branch feature/turnos
@@ -58,6 +59,13 @@ namespace mediTool.Mappers
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.TurnoId, opt => opt.Ignore())
                 .ForMember(dest => dest.FechaRegistro, opt => opt.Ignore());
+
+            // Mapeos de salida (response DTOs)
+            CreateMap<Paciente, PacienteResumenDto>();
+            CreateMap<Profesional, ProfesionalResumenDto>();
+            CreateMap<Turno, TurnoResponseDto>();
+            CreateMap<TurnoFijo, TurnoFijoResponseDto>();
+            CreateMap<Asistencia, AsistenciaResponseDto>();
 
             // Mapeos de Informe
             CreateMap<InformeCreateDto, Informe>()
