@@ -19,7 +19,10 @@ namespace Service.Turnos
 
         public async Task GenerarInstancias(TurnoFijo regla, DateTime hastaFecha)
         {
-            var fechaActual = regla.FechaInicio;
+            var ultimo = await _turnoRepository.ObtenerUltimoPorTurnoFijo(regla.Id);
+            var fechaActual = ultimo != null
+                ? DateOnly.FromDateTime(ultimo.FechaHora).AddDays(7)
+                : regla.FechaInicio;
             var limite = regla.FechaFin.HasValue && regla.FechaFin.Value < DateOnly.FromDateTime(hastaFecha)
                 ? regla.FechaFin.Value.ToDateTime(TimeOnly.MinValue)
                 : hastaFecha.Date;
