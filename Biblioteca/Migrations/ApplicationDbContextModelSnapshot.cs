@@ -406,7 +406,8 @@ namespace Biblioteca.Migrations
                 {
                     b.HasOne("Biblioteca.Entities.Turno", "Turno")
                         .WithMany("Asistencias")
-                        .HasForeignKey("TurnoId");
+                        .HasForeignKey("TurnoId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Turno");
                 });
@@ -416,7 +417,7 @@ namespace Biblioteca.Migrations
                     b.HasOne("Biblioteca.Entities.Paciente", "Paciente")
                         .WithMany("Informes")
                         .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Biblioteca.Entities.Profesional", "Profesional")
                         .WithMany("Informes")
@@ -434,13 +435,13 @@ namespace Biblioteca.Migrations
                     b.HasOne("Biblioteca.Entities.Paciente", "Paciente")
                         .WithMany("PacienteProfesionales")
                         .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Biblioteca.Entities.Profesional", "Profesional")
                         .WithMany("PacienteProfesionales")
                         .HasForeignKey("ProfesionalId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Paciente");
@@ -453,7 +454,7 @@ namespace Biblioteca.Migrations
                     b.HasOne("Biblioteca.Entities.Profesional", "Profesional")
                         .WithMany("Reuniones")
                         .HasForeignKey("ProfesionalId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Profesional");
@@ -464,18 +465,19 @@ namespace Biblioteca.Migrations
                     b.HasOne("Biblioteca.Entities.Paciente", "Paciente")
                         .WithMany()
                         .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Biblioteca.Entities.Profesional", "Profesional")
                         .WithMany()
                         .HasForeignKey("ProfesionalId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Biblioteca.Entities.TurnoFijo", "TurnoFijo")
                         .WithMany("Turnos")
-                        .HasForeignKey("TurnoFijoId");
+                        .HasForeignKey("TurnoFijoId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Paciente");
 
@@ -489,13 +491,13 @@ namespace Biblioteca.Migrations
                     b.HasOne("Biblioteca.Entities.Paciente", "Paciente")
                         .WithMany()
                         .HasForeignKey("PacienteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Biblioteca.Entities.Profesional", "Profesional")
                         .WithMany()
                         .HasForeignKey("ProfesionalId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Paciente");
