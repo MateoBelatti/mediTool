@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Service.Profesionales;
 using Utils.DTOs.Profesional;
+using Utils.Helpers;
 
 namespace mediTool.Controllers
 {
@@ -20,6 +21,7 @@ namespace mediTool.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
+            User.EnsureOwnership(id);
             var profesional = await _profesionalService.GetByIdAsync(id);
             if (profesional == null)
             {
@@ -49,6 +51,7 @@ namespace mediTool.Controllers
                 return BadRequest(ModelState);
             }
 
+            User.EnsureOwnership(id);
             var result = await _profesionalService.UpdateAsync(id, dto);
             if (result == null)
             {
@@ -58,6 +61,7 @@ namespace mediTool.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -73,6 +77,7 @@ namespace mediTool.Controllers
         [HttpPost("{id}/pacientes/{pacienteId}")]
         public async Task<IActionResult> VincularPaciente(int id, int pacienteId)
         {
+            User.EnsureOwnership(id);
             await _profesionalService.VincularPacienteAsync(id, pacienteId);
             return Ok();
         }
@@ -80,6 +85,7 @@ namespace mediTool.Controllers
         [HttpGet("{id}/pacientes")]
         public async Task<IActionResult> GetPacientesVinculados(int id)
         {
+            User.EnsureOwnership(id);
             var pacientes = await _profesionalService.GetPacientesVinculadosAsync(id);
             return Ok(pacientes);
         }
