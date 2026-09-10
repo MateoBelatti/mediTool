@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Service.Turnos;
 using Utils.DTOs.Turno;
+using Utils.Helpers;
 
 namespace mediTool.Controllers
 {
@@ -22,6 +23,11 @@ namespace mediTool.Controllers
         [HttpGet("agenda")]
         public async Task<IActionResult> GetAgenda([FromQuery] DateTime desde, [FromQuery] DateTime hasta, [FromQuery] int? profesionalId)
         {
+            if (profesionalId.HasValue)
+                User.EnsureOwnership(profesionalId.Value);
+            else if (!User.IsAdmin())
+                profesionalId = User.GetUserId();
+
             var turnos = await _turnoService.ObtenerAgenda(desde, hasta, profesionalId);
             return Ok(turnos);
         }
@@ -30,6 +36,7 @@ namespace mediTool.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var turno = await _turnoService.ObtenerPorId(id);
+            User.EnsureOwnership(turno.ProfesionalId);
             return Ok(turno);
         }
 
@@ -38,6 +45,9 @@ namespace mediTool.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            if (!User.IsAdmin())
+                dto.ProfesionalId = User.GetUserId();
+
             var result = await _turnoService.CrearSuelto(dto);
             return Ok(result);
         }
@@ -45,6 +55,8 @@ namespace mediTool.Controllers
         [HttpPatch("{id}/reprogramar")]
         public async Task<IActionResult> Reprogramar(int id, [FromQuery] DateTime nuevaFechaHora)
         {
+            var turno = await _turnoService.ObtenerPorId(id);
+            User.EnsureOwnership(turno.ProfesionalId);
             await _turnoService.Reprogramar(id, nuevaFechaHora);
             return NoContent();
         }
@@ -52,10 +64,13 @@ namespace mediTool.Controllers
         [HttpPatch("{id}/estado")]
         public async Task<IActionResult> CambiarEstado(int id, [FromQuery] EstadoTurno nuevoEstado)
         {
+            var turno = await _turnoService.ObtenerPorId(id);
+            User.EnsureOwnership(turno.ProfesionalId);
             await _turnoService.CambiarEstado(id, nuevoEstado);
             return NoContent();
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPost("generar-masivo")]
         public async Task<IActionResult> GenerarMasivo([FromQuery] DateTime hastaFecha)
         {
