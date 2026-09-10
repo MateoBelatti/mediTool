@@ -8,5 +8,6 @@ namespace Service.TurnosFijos
         Task<TurnoFijoResponseDto> Editar(int turnoFijoId, EditarTurnoFijoDto dto);
         Task Desactivar(int turnoFijoId);
         Task<List<TurnoFijoResponseDto>> ListarPorProfesional(int profesionalId);
+        Task<TurnoFijoResponseDto?> ObtenerPorId(int id);
     }
 }
