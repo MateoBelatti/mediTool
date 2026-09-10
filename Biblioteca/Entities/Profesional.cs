@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Utils.Enums;
 
 namespace Biblioteca.Entities
 {
@@ -51,6 +52,10 @@ namespace Biblioteca.Entities
 
         [Column("refresh_token_expiry_time")]
         public DateTime? RefreshTokenExpiryTime { get; set; }
+
+        [Required]
+        [Column("rol")]
+        public Rol Rol { get; set; } = Rol.Profecional;
 
         public ICollection<PacienteProfesional> PacienteProfesionales { get; set; } = new List<PacienteProfesional>();
         public ICollection<Informe> Informes { get; set; } = new List<Informe>();

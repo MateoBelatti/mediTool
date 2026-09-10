@@ -250,6 +250,10 @@ namespace Biblioteca.Migrations
                         .HasColumnType("character varying(45)")
                         .HasColumnName("registro_prestadores");
 
+                    b.Property<int>("Rol")
+                        .HasColumnType("integer")
+                        .HasColumnName("rol");
+
                     b.Property<string>("Telefono")
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)")
