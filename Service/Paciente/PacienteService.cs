@@ -21,13 +21,15 @@ namespace Service.Pacientes
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<PacienteResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<PacienteResponseDto>> GetAllAsync(int? profesionalId = null)
         {
-            var result = await _repository.GetAllAsync();
+            var result = profesionalId.HasValue
+                ? await _repository.GetAllVinculadosAsync(profesionalId.Value)
+                : await _repository.GetAllAsync();
             return _mapper.Map<IEnumerable<PacienteResponseDto>>(result);
         }
 
-        public async Task<PacienteResponseDto> AddAsync(PacienteCreateDto dto)
+        public async Task<PacienteResponseDto> AddAsync(PacienteCreateDto dto, int? profesionalId = null)
         {
             ValidatePacienteDto(dto);
 
@@ -53,6 +55,13 @@ namespace Service.Pacientes
             entity.Dni = normalizedDni;
             var result = await _repository.AddAsync(entity);
             await _repository.GuardarCambios();
+
+            if (profesionalId.HasValue)
+            {
+                await _repository.VincularAsync(result.Id, profesionalId.Value);
+                await _repository.GuardarCambios();
+            }
+
             return _mapper.Map<PacienteResponseDto>(result);
         }
 
@@ -102,6 +111,11 @@ namespace Service.Pacientes
         {
             var result = await _repository.GetByIdAsync(id);
             return _mapper.Map<PacienteResponseDto>(result);
+        }
+
+        public async Task<bool> IsVinculadoAsync(int pacienteId, int profesionalId)
+        {
+            return await _repository.IsVinculadoAsync(pacienteId, profesionalId);
         }
 
         public async Task<PacienteResponseDto?> GetByDniAsync(string dni)

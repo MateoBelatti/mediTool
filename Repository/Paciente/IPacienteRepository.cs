@@ -5,6 +5,9 @@ namespace Repository.Pacientes
     public interface IPacienteRepository
     {
         Task<IEnumerable<Paciente>> GetAllAsync();
+        Task<IEnumerable<Paciente>> GetAllVinculadosAsync(int profesionalId);
+        Task<bool> IsVinculadoAsync(int pacienteId, int profesionalId);
+        Task VincularAsync(int pacienteId, int profesionalId);
         Task<Paciente?> GetAsync(Paciente entity);
         Task<Paciente> AddAsync(Paciente entity);
         Task<Paciente> UpdateAsync(Paciente entity);

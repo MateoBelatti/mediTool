@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Service.Pacientes;
 using Utils.DTOs.Paciente;
+using Utils.Exceptions;
+using Utils.Helpers;
 
 namespace mediTool.Controllers
 {
@@ -17,10 +19,18 @@ namespace mediTool.Controllers
             _pacienteService = pacienteService;
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var pacientes = await _pacienteService.GetAllAsync();
+            var pacientes = await _pacienteService.GetAllAsync(null);
+            return Ok(pacientes);
+        }
+
+        [HttpGet("vinculados")]
+        public async Task<IActionResult> GetVinculados()
+        {
+            var pacientes = await _pacienteService.GetAllAsync(User.GetUserId());
             return Ok(pacientes);
         }
 
@@ -32,6 +42,10 @@ namespace mediTool.Controllers
             {
                 return NotFound();
             }
+
+            if (!User.IsAdmin() && !await _pacienteService.IsVinculadoAsync(id, User.GetUserId()))
+                throw new ForbiddenError("No tiene permisos para acceder a este recurso.");
+
             return Ok(paciente);
         }
 
@@ -43,7 +57,8 @@ namespace mediTool.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _pacienteService.AddAsync(dto);
+            var profesionalId = User.IsAdmin() ? null : (int?)User.GetUserId();
+            var result = await _pacienteService.AddAsync(dto, profesionalId);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
@@ -55,6 +70,9 @@ namespace mediTool.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (!User.IsAdmin() && !await _pacienteService.IsVinculadoAsync(id, User.GetUserId()))
+                throw new ForbiddenError("No tiene permisos para acceder a este recurso.");
+
             var result = await _pacienteService.UpdateAsync(id, dto);
             if (result == null)
             {
@@ -64,6 +82,7 @@ namespace mediTool.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

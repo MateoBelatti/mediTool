@@ -24,6 +24,45 @@ namespace Repository.Pacientes
             return await _context.Pacientes.ToListAsync();
         }
 
+        public async Task<IEnumerable<Paciente>> GetAllVinculadosAsync(int profesionalId)
+        {
+            if (profesionalId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(profesionalId), "El id debe ser mayor que 0.");
+            return await _context.PacienteProfesionales
+                .Where(pp => pp.ProfesionalId == profesionalId)
+                .Select(pp => pp.Paciente)
+                .ToListAsync();
+        }
+
+        public async Task<bool> IsVinculadoAsync(int pacienteId, int profesionalId)
+        {
+            if (pacienteId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(pacienteId), "El id debe ser mayor que 0.");
+            if (profesionalId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(profesionalId), "El id debe ser mayor que 0.");
+            return await _context.PacienteProfesionales
+                .AnyAsync(pp => pp.PacienteId == pacienteId && pp.ProfesionalId == profesionalId);
+        }
+
+        public async Task VincularAsync(int pacienteId, int profesionalId)
+        {
+            if (pacienteId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(pacienteId), "El id debe ser mayor que 0.");
+            if (profesionalId <= 0)
+                throw new ArgumentOutOfRangeException(nameof(profesionalId), "El id debe ser mayor que 0.");
+            var exists = await _context.PacienteProfesionales
+                .AnyAsync(pp => pp.ProfesionalId == profesionalId && pp.PacienteId == pacienteId);
+            if (!exists)
+            {
+                _context.PacienteProfesionales.Add(new PacienteProfesional
+                {
+                    ProfesionalId = profesionalId,
+                    PacienteId = pacienteId,
+                    FechaVinculacion = DateTime.UtcNow
+                });
+            }
+        }
+
         public async Task<Paciente> AddAsync(Paciente entity)
         {
             ArgumentNullException.ThrowIfNull(entity, nameof(entity));
