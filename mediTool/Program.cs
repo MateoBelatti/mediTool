@@ -73,6 +73,13 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("Profecional", policy => policy.RequireRole("Profecional"));
+    options.AddPolicy("AdminOrProfecional", policy => policy.RequireRole("Admin", "Profecional"));
+});
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowLocalhost5173",
