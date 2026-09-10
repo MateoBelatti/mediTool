@@ -73,13 +73,6 @@ namespace Service.TurnosFijos
             return _mapper.Map<List<TurnoFijoResponseDto>>(turnosFijos);
         }
 
-        public async Task<TurnoFijoResponseDto?> ObtenerPorId(int id)
-        {
-            var turnoFijo = await _turnoFijoRepository.ObtenerPorId(id);
-            if (turnoFijo == null) return null;
-            return _mapper.Map<TurnoFijoResponseDto>(turnoFijo);
-        }
-
         private static void ValidarReglas(TurnoFijo turnoFijo)
         {
             if (turnoFijo.DiaSemana is < 0 or > 6)

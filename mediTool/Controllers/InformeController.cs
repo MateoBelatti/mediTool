@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Service.Informes;
 using Utils.DTOs.Informe;
-using Utils.Helpers;
 
 namespace mediTool.Controllers
 {
@@ -21,9 +20,7 @@ namespace mediTool.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var informes = User.IsAdmin()
-                ? await _informeService.GetAllAsync()
-                : await _informeService.GetByProfesionalIdAsync(User.GetUserId());
+            var informes = await _informeService.GetAllAsync();
             return Ok(informes);
         }
 
@@ -35,15 +32,12 @@ namespace mediTool.Controllers
             {
                 return NotFound();
             }
-
-            User.EnsureOwnership(informe.ProfesionalId);
             return Ok(informe);
         }
 
         [HttpGet("profesional/{profesionalId}")]
         public async Task<IActionResult> GetByProfesionalId(int profesionalId)
         {
-            User.EnsureOwnership(profesionalId);
             var informes = await _informeService.GetByProfesionalIdAsync(profesionalId);
             return Ok(informes);
         }
@@ -55,9 +49,6 @@ namespace mediTool.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            if (!User.IsAdmin())
-                dto.ProfesionalId = User.GetUserId();
 
             var result = await _informeService.AddAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
@@ -71,33 +62,24 @@ namespace mediTool.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existing = await _informeService.GetByIdAsync(id);
-            if (existing == null)
+            var result = await _informeService.UpdateAsync(id, dto);
+            if (result == null)
             {
                 return NotFound();
             }
 
-            User.EnsureOwnership(existing.ProfesionalId);
-
-            if (!User.IsAdmin())
-                dto.ProfesionalId = User.GetUserId();
-
-            var result = await _informeService.UpdateAsync(id, dto);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var existing = await _informeService.GetByIdAsync(id);
-            if (existing == null)
+            var success = await _informeService.DeleteAsync(id);
+            if (!success)
             {
                 return NotFound();
             }
 
-            User.EnsureOwnership(existing.ProfesionalId);
-
-            var success = await _informeService.DeleteAsync(id);
             return NoContent();
         }
     }

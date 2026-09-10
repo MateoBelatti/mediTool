@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Service.Reuniones;
 using Utils.DTOs.Reunion;
-using Utils.Helpers;
 
 namespace mediTool.Controllers
 {
@@ -21,9 +20,7 @@ namespace mediTool.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var reuniones = User.IsAdmin()
-                ? await _reunionService.GetAllAsync()
-                : await _reunionService.GetByProfesionalIdAsync(User.GetUserId());
+            var reuniones = await _reunionService.GetAllAsync();
             return Ok(reuniones);
         }
 
@@ -35,15 +32,12 @@ namespace mediTool.Controllers
             {
                 return NotFound();
             }
-
-            User.EnsureOwnership(reunion.ProfesionalId);
             return Ok(reunion);
         }
 
         [HttpGet("profesional/{profesionalId}")]
         public async Task<IActionResult> GetByProfesionalId(int profesionalId)
         {
-            User.EnsureOwnership(profesionalId);
             var reuniones = await _reunionService.GetByProfesionalIdAsync(profesionalId);
             return Ok(reuniones);
         }
@@ -55,9 +49,6 @@ namespace mediTool.Controllers
             {
                 return BadRequest(ModelState);
             }
-
-            if (!User.IsAdmin())
-                dto.ProfesionalId = User.GetUserId();
 
             var result = await _reunionService.AddAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
@@ -71,33 +62,24 @@ namespace mediTool.Controllers
                 return BadRequest(ModelState);
             }
 
-            var existing = await _reunionService.GetByIdAsync(id);
-            if (existing == null)
+            var result = await _reunionService.UpdateAsync(id, dto);
+            if (result == null)
             {
                 return NotFound();
             }
 
-            User.EnsureOwnership(existing.ProfesionalId);
-
-            if (!User.IsAdmin())
-                dto.ProfesionalId = User.GetUserId();
-
-            var result = await _reunionService.UpdateAsync(id, dto);
             return Ok(result);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var existing = await _reunionService.GetByIdAsync(id);
-            if (existing == null)
+            var success = await _reunionService.DeleteAsync(id);
+            if (!success)
             {
                 return NotFound();
             }
 
-            User.EnsureOwnership(existing.ProfesionalId);
-
-            var success = await _reunionService.DeleteAsync(id);
             return NoContent();
         }
     }
