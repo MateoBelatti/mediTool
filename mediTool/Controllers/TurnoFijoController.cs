@@ -26,12 +26,14 @@ namespace mediTool.Controllers
             return Ok(turnos);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CrearTurnoFijoDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
-            
+
+            if (!User.IsAdmin())
+                dto.ProfesionalId = User.GetUserId();
+
             var result = await _turnoFijoService.Crear(dto);
             return Ok(result);
         }
@@ -49,10 +51,13 @@ namespace mediTool.Controllers
             return Ok(result);
         }
 
-        [Authorize(Policy = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
+            var existing = await _turnoFijoService.ObtenerPorId(id);
+            if (existing == null) return NotFound();
+            User.EnsureOwnership(existing.ProfesionalId);
+
             await _turnoFijoService.Desactivar(id);
             return NoContent();
         }
