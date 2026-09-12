@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Service.TurnosFijos;
 using Utils.DTOs.TurnoFijo;
+using Utils.Helpers;
 
 namespace mediTool.Controllers
 {
@@ -20,10 +21,12 @@ namespace mediTool.Controllers
         [HttpGet("profesional/{profesionalId}")]
         public async Task<IActionResult> GetByProfesional(int profesionalId)
         {
+            User.EnsureOwnership(profesionalId);
             var turnos = await _turnoFijoService.ListarPorProfesional(profesionalId);
             return Ok(turnos);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] CrearTurnoFijoDto dto)
         {
@@ -38,10 +41,15 @@ namespace mediTool.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
+            var existing = await _turnoFijoService.ObtenerPorId(id);
+            if (existing == null) return NotFound();
+            User.EnsureOwnership(existing.ProfesionalId);
+
             var result = await _turnoFijoService.Editar(id, dto);
             return Ok(result);
         }
 
+        [Authorize(Policy = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
