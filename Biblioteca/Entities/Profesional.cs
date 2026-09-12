@@ -55,7 +55,7 @@ namespace Biblioteca.Entities
 
         [Required]
         [Column("rol")]
-        public Rol Rol { get; set; } = Rol.Profecional;
+        public Rol Rol { get; set; } = Rol.Profesional;
 
         public ICollection<PacienteProfesional> PacienteProfesionales { get; set; } = new List<PacienteProfesional>();
         public ICollection<Informe> Informes { get; set; } = new List<Informe>();

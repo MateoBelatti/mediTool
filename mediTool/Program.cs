@@ -76,8 +76,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("Profecional", policy => policy.RequireRole("Profecional"));
-    options.AddPolicy("AdminOrProfecional", policy => policy.RequireRole("Admin", "Profecional"));
+    options.AddPolicy("Profesional", policy => policy.RequireRole("Profesional"));
+    options.AddPolicy("AdminOrProfesional", policy => policy.RequireRole("Admin", "Profesional"));
 });
 
 builder.Services.AddCors(options =>
